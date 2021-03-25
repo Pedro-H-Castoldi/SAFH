@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}SAFH | Home{% endblock %}
+{% block content %}
+<main>
+    <header>
+        <h1>HOME</h1>
+    </header>
+
+    <div>
+        <form action="{% url 'search' %}" method="GET">
+            <div>
+                <p>Buscar ficha</p>
+                <input type="text" placeholder="Nome completo">
+                <input type="text" placeholder="SUS">
+                <input type="date" placeholder="Nasc.">
+                <input type="date" placeholder="Consulta">
+                <select name="" id="">
+                    <option value="">Simples</option>
+                    <option value="">Medicação</option>
+                    <option value="">Observação</option>
+                    <option value="">Sutura</option>
+                    <option value="">Curativo</option>
+                    <option value="">R. Pontos</option>
+                    <option value="">RH</option>
+                </select>
+                <button>Buscar</button>
+            </div>
+        </form>
+    </div>
+    
+    <div class="btn-group-vertical">
+    <a class="btn btn-outline-primary" href="{% url 'simple' %}">Simples</a>
+    <a class="btn btn-outline-secondary" href="{% url 'medication' %}">Medicação</a>
+    <a class="btn btn-outline-success" href="{% url 'observation' %}">Observação</a>
+    <a class="btn btn-outline-danger" href="{% url 'suture' %}">Sutura</a>
+    <a class="btn btn-outline-warning" href="{% url 'band_aid' %}">Curativo</a>
+    <a class="btn btn-outline-info" href="{% url 'withdrawal' %}">Retirada de Pontos</a>
+    <a class="btn btn-outline-dark" href="{% url 'rh' %}">RH</a>
+    </div>
+</main>
+{% endblock %}
+
+
+
+
