@@ -1,8 +1,11 @@
 from django.http import HttpResponse
 from django.shortcuts import render
-from django.views.generic import TemplateView
+from django.urls import reverse_lazy
+from django.contrib import messages
+from django.views.generic import TemplateView, FormView
 
 from .models import MedicalRecord
+from .forms import MedicalRecordModelForm
 
 
 class HomeView(TemplateView):
@@ -18,61 +21,185 @@ class SimpleView(TemplateView):
         return context
 
 
-class MedicationView(TemplateView):
-    template_name = 'medication.html'
+class AddMedicalRecordView(FormView):
+    template_name = 'add_medical_record.html'
+    form_class = MedicalRecordModelForm
+    success_url = reverse_lazy('index')
 
-    def get_context_data(self, **kwargs):
-        context = super(MedicationView, self).get_context_data(**kwargs)
-        context['medication'] = MedicalRecord.objects.filter(type='medication')
-        return context
-
-
-class ObservationView(TemplateView):
-    template_name = 'observation.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(ObservationView, self).get_context_data(**kwargs)
-        context['observation'] = MedicalRecord.objects.filter(type='observation')
-        return context
-
-
-class BandAidView(TemplateView):
-    template_name = 'band_aid.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(BandAidView, self).get_context_data(**kwargs)
-        context['band_aid'] = MedicalRecord.objects.filter(type='band_aid')
-        return context
-
-
-class SutureView(TemplateView):
-    template_name = 'suture.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(SutureView, self).get_context_data(**kwargs)
-        context['suture'] = MedicalRecord.objects.filter(type='suture')
-        return context
-
-
-class WithdrawalView(TemplateView):
-    template_name = 'withdrawal.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(WithdrawalView, self).get_context_data(**kwargs)
-        context['withdrawal'] = MedicalRecord.objects.filter(type='withdrawal')
-        return context
-
-
-class RhView(TemplateView):
-    template_name = 'rh.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(RhView, self).get_context_data(**kwargs)
-        context['rh'] = MedicalRecord.objects.filter(type='rh')
-        return context
+    def form_valid(self, form, *args, **kwargs):
+        form.save()
+        messages.success(self.request, 'Ficha cadastrada com sucesso.')
+        return super(AddMedicalRecordView, self).form_valid(form, *args, **kwargs)
+    
+    def form_invalid(self, form, *args, **kwargs):
+        messages.error(self.request, 'Erro ao cadastrar imagem.')
+        return super(AddMedicalRecordView, self).form_invalid(form, *args, **kwargs)
 
 
 def search_view(request):
-    context = {'qqq': 'q'}
+    context = {}
+    medical_record = None
+    name = sus = type = ''
+    birth_date = consultation_date = '1111-11-11'
+
+    if request.method == 'GET':
+        if request.GET.get('name'):
+            name = request.GET.get('name')
+        if request.GET.get('sus'):
+            sus = request.GET.get('sus')
+        if request.GET.get('birth_date'):
+            birth_date = request.GET.get('birth_date')
+        if request.GET.get('consultation_date'):
+            consultation_date = request.GET.get('consultation_date')
+        type = request.GET.get('type')
+
+        if name != '' and sus != '' and birth_date != '1111-11-11' and consultation_date != '1111-11-11':
+            if type != 'all':
+                medical_record = MedicalRecord.objects.filter(
+                    name=name,
+                    sus=sus,
+                    birth_date=birth_date,
+                    consultation_date=consultation_date,
+                    type=type
+                )
+            else:
+                medical_record = MedicalRecord.objects.filter(
+                    name=name,
+                    sus=sus,
+                    birth_date=birth_date,
+                    consultation_date=consultation_date
+                )
+
+        elif name != '' and sus != '' and birth_date != '1111-11-11':
+            if type != 'all':
+                medical_record = MedicalRecord.objects.filter(
+                    name=name,
+                    sus=sus,
+                    birth_date=birth_date,
+                    type=type
+                )
+            else:
+                medical_record = MedicalRecord.objects.filter(name=name, sus=sus, birth_date=birth_date)
+
+        elif name != '' and sus != '' and consultation_date != '1111-11-11':
+            if type != 'all':
+                medical_record = MedicalRecord.objects.filter(
+                    name=name,
+                    sus=sus,
+                    consultation_date=consultation_date,
+                    type=type
+                )
+            else:
+                medical_record = MedicalRecord.objects.filter(name=name, sus=sus, birth_date=birth_date)
+
+        elif name != '' and birth_date != '1111-11-11' and consultation_date != '1111-11-11':
+            if type != 'all':
+                medical_record = MedicalRecord.objects.filter(
+                    name=name,
+                    birth_date=birth_date,
+                    consultation_date=consultation_date,
+                    type=type
+                )
+            else:
+                medical_record = MedicalRecord.objects.filter(
+                    name=name,
+                    birth_date=birth_date,
+                    consultation_date=consultation_date
+                )
+
+        elif name != '' and sus != '':
+            if type != 'all':
+                medical_record = MedicalRecord.objects.filter(name=name, sus=sus, type=type)
+            else:
+                medical_record = MedicalRecord.objects.filter(name=name, sus=sus)
+
+        elif name != '' and birth_date != '1111-11-11':
+            if type != 'all':
+                medical_record = MedicalRecord.objects.filter(name=name, birth_date=birth_date, type=type)
+            else:
+                medical_record = MedicalRecord.objects.filter(name=name, birth_date=birth_date)
+
+        elif name != '' and consultation_date != '1111-11-11':
+            if type != 'all':
+                medical_record = MedicalRecord.objects.filter(
+                    name=name,
+                    consultation_date=consultation_date,
+                    type=type
+                )
+            else:
+                medical_record = MedicalRecord.objects.filter(name=name, consultation_date=consultation_date)
+
+        elif sus != '' and birth_date != '1111-11-11' and consultation_date != '1111-11-11':
+            if type != 'all':
+                medical_record = MedicalRecord.objects.filter(
+                    sus=sus,
+                    birth_date=birth_date,
+                    consultation_date=consultation_date,
+                    type=type
+                )
+            else:
+                medical_record = MedicalRecord.objects.filter(
+                    sus=sus,
+                    birth_date=birth_date,
+                    consultation_date=consultation_date
+                )
+
+        elif sus != '' and birth_date != '1111-11-11':
+            if type != 'all':
+                medical_record = MedicalRecord.objects.filter(sus=sus, birth_date=birth_date, type=type)
+            else:
+                medical_record = MedicalRecord.objects.filter(sus=sus, birth_date=birth_date)
+
+        elif sus != '' and consultation_date != '1111-11-11':
+            if type != 'all':
+                medical_record = MedicalRecord.objects.filter(
+                    sus=sus,
+                    consultation_date=consultation_date,
+                    type=type
+                )
+            else:
+                medical_record = MedicalRecord.objects.filter(sus=sus, consultation_date=consultation_date)
+
+        elif birth_date != '1111-11-11' and consultation_date != '1111-11-11':
+            if type != 'all':
+                medical_record = MedicalRecord.objects.filter(
+                    birth_date=birth_date,
+                    consultation_date=consultation_date,
+                    type=type
+                )
+            else:
+                medical_record = MedicalRecord.objects.filter(
+                    birth_date=birth_date,
+                    consultation_date=consultation_date
+                )
+
+        elif name != '':
+            if type != 'all':
+                medical_record = MedicalRecord.objects.filter(name=name, type=type)
+            else:
+                medical_record = MedicalRecord.objects.filter(name=name)
+
+        elif sus != '':
+            if type != 'all':
+                medical_record = MedicalRecord.objects.filter(sus=sus, type=type)
+            else:
+                medical_record = MedicalRecord.objects.filter(birth_date=birth_date)
+
+        elif birth_date != '1111-11-11':
+            if type != 'all':
+                medical_record = MedicalRecord.objects.filter(birth_date=birth_date, type=type)
+            else:
+                medical_record = MedicalRecord.objects.filter(birth_date=birth_date)
+
+        elif consultation_date != '1111-11-11':
+            if type != 'all':
+                medical_record = MedicalRecord.objects.filter(consultation_date=consultation_date, type=type)
+            else:
+                medical_record = MedicalRecord.objects.filter(consultation_date=consultation_date)
+
+        elif type != 'all':
+            medical_record = MedicalRecord.objects.filter(type=type)
+
+        context = {'medical_record': medical_record}
 
     return render(request, 'search.html', context)

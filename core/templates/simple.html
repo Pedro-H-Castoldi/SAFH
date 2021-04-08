@@ -2,6 +2,7 @@
 {% block title %}SAFH | Simple{% endblock %}
 {% block content %}
 <h1>Simples</h1>
+
     {% if simple %}
         {% for s in simple %}
             <h2>Nome: {{ s.name }}</h2>
@@ -14,15 +15,4 @@
     {% else %}
         <h2>Sem fichas Simples...</h2>
     {% endif %}
-
-    <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Pedro Henrique Castoldi Bezerra</h5>
-          <p class="card-text">SUS: 000 0000 0000 0000</p>
-          <p class="card-text">Sexo: Masculino</p>
-          <p class="card-text">Data de Nascimento: 24/09/1996</p>
-          <p class="card-text">Data da Consulta: 14/05/2021</p>
-        </div>
-        <img src="/media/medical_records/1610368485_9dvD8ZK.jpg" class="card-img-bottom" alt="...">
-      </div>
 {% endblock %}
