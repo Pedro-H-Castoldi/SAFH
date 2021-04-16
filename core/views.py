@@ -1,8 +1,8 @@
 from django.http import HttpResponse
-from django.shortcuts import render
-from django.urls import reverse_lazy
+from django.shortcuts import render, get_object_or_404
+from django.urls import reverse_lazy, reverse
 from django.contrib import messages
-from django.views.generic import TemplateView, FormView
+from django.views.generic import TemplateView, FormView, DeleteView, UpdateView
 
 from .models import MedicalRecord
 from .forms import MedicalRecordModelForm
@@ -34,6 +34,43 @@ class AddMedicalRecordView(FormView):
     def form_invalid(self, form, *args, **kwargs):
         messages.error(self.request, 'Erro ao cadastrar imagem.')
         return super(AddMedicalRecordView, self).form_invalid(form, *args, **kwargs)
+
+
+class EditMedicalRecord(UpdateView):
+    template_name = 'add_medical_record.html'
+    form_class = MedicalRecordModelForm
+
+    def get_object(self, queryset=None):
+        id_ = self.kwargs.get('pk')
+        return get_object_or_404(MedicalRecord, id=id_)
+
+    def form_valid(self, form, *args, **kwargs):
+        messages.success(self.request, 'Ficha médica editada com sucesso')
+        return super(EditMedicalRecord, self).form_valid(form, *args, **kwargs)
+    
+    def form_invalid(self, form, *args, **kwargs):
+        messages.error(self.request, 'Erro ao editar ficha. Preencha o formulário corretamente')
+        return super(EditMedicalRecord, self).form_invalid(form, *args, **kwargs)
+
+
+class DeleteMedicalRecord(DeleteView):
+    template_name = 'delete_medical_record.html'
+
+    def get_object(self):
+        id_ = self.kwargs.get('pk')
+        return get_object_or_404(MedicalRecord, id=id_)
+
+    def get_success_url(self):
+        return reverse('index')
+
+
+class MedicalRecordView(TemplateView):
+    template_name = 'details_medical_record.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(MedicalRecordView, self).get_context_data(**kwargs)
+        context['medical_record'] = MedicalRecord.objects.filter(id=kwargs.get('pk'))
+        return context
 
 
 def search_view(request):
@@ -203,3 +240,7 @@ def search_view(request):
         context = {'medical_record': medical_record}
 
     return render(request, 'search.html', context)
+
+
+
+

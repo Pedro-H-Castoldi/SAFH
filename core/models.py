@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from stdimage import StdImageField
 
 
@@ -38,6 +39,9 @@ class MedicalRecord(Base):
     class Meta:
         verbose_name = 'Ficha médica'
         verbose_name_plural = 'Fichas médicas'
+
+    def get_absolute_url(self):
+        return reverse('medical_record', kwargs={"pk": self.id })
 
     def __str__(self):
         return f'{self.name} ({self.type})'

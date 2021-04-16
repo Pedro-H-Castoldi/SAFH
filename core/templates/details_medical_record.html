@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}SAFH | Ficha Médica{% endblock %}
+{% block content %}
+
+<main>
+    <div  class="content-medical_record">
+        <div class="card-title">
+            <p>Tipo: {{ medical_record.0.type }}</p>
+        </div>
+        <div class="card-subtitle">
+            <p>Nome: {{ medical_record.0.name }}</p>
+        </div>
+        <div class="card-subtitle">
+            {% if medical_record.0.sus %}
+                <p>SUS: {{ medical_record.0.sus }}</p>
+            {% else %}
+                <p>SUS: Não fornecido</p>
+            {% endif %}
+        </div>
+        <div class="card-subtitle">
+            <p>Sexo: {{ medical_record.0.sex }}</p>
+        </div>
+        <div class="card-subtitle">
+            {% if medical_record.0.birth_date %}
+                <p>Data de Nascimento: {{ medical_record.0.birth_date }}</p>
+            {% else %}
+                <p>Data de Nascimento: Não fornecido</p>
+            {% endif %}
+        </div>
+        <div class="card-subtitle">
+            {% if medical_record.0.consultation_date %}
+                <p>Data da Consulta: {{ medical_record.0.consultation_date }}</p>
+            {% else %}
+                <p>Data da Consulta: Não fornecido</p>
+            {% endif %}
+        </div>
+        <div class="card-img">
+            <img src="{{ medical_record.0.medical_record.url }}" alt="Ficha médica">
+        </div>
+        <div>
+            <a href="{% url 'edit_medical_record' medical_record.0.id %}"><button>Editar</button></a>
+            <a href="{% url 'delete_medical_record' medical_record.0.id %}"><button>Excluir</button></a>
+            <button>Imprimir</button>
+        </div> 
+    </div>
+</main>
+{% endblock %}

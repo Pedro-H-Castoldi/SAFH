@@ -3,8 +3,18 @@
 {% block content %}
 
 <main>
-    <h1>Fichas pesquisadas</h1>
-    {{ medical_record }}
+    <h1>Fichas encontradas</h1>
+    <div class="container">
+        {% if medical_record %}
+            {% for mr in medical_record %}
+                <div class="show">
+                    <a href="{% url 'medical_record' mr.id %}"><span>Nome: {{ mr.name }}</span> <span>SUS: {{ mr.sus }}</span> <span>D. Nas.: {{ mr.birth_date }}</span> <span>Tipo: {{ mr.type }}</span></a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="alert-dark">Nenhuma ficha com essas informações foi encontrada...</p>
+        {% endif %}
+    </div>
 </main>
 
 {% endblock %}
