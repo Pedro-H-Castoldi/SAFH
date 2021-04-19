@@ -2,29 +2,31 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.contrib import messages
-from django.views.generic import TemplateView, FormView, DeleteView, UpdateView
+from django.views.generic import TemplateView, FormView, DeleteView, UpdateView, CreateView
 
 from .models import MedicalRecord
 from .forms import MedicalRecordModelForm
+from .filters import MedicalRecordFilter
 
 
 class HomeView(TemplateView):
     template_name = 'index.html'
 
-
-class SimpleView(TemplateView):
-    template_name = 'simple.html'
-
     def get_context_data(self, **kwargs):
-        context = super(SimpleView, self).get_context_data(**kwargs)
-        context['simple'] = MedicalRecord.objects.filter(type='simple')
+        context = super(HomeView, self).get_context_data(**kwargs)
+        object_list = MedicalRecord.objects.all()
+        medical_record_list = MedicalRecordFilter(self.request.GET, queryset=object_list)
+        context['object_list'] = object_list
+        context['filter'] = medical_record_list
+
         return context
 
 
-class AddMedicalRecordView(FormView):
+
+class AddMedicalRecordView(CreateView):
     template_name = 'add_medical_record.html'
     form_class = MedicalRecordModelForm
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('add_record')
 
     def form_valid(self, form, *args, **kwargs):
         form.save()
@@ -74,11 +76,19 @@ class MedicalRecordView(TemplateView):
 
 
 def search_view(request):
-    context = {}
-    medical_record = None
-    name = sus = type = ''
-    birth_date = consultation_date = '1111-11-11'
+    object_list = MedicalRecord.objects.all()
+    medical_record_list = MedicalRecordFilter(request.GET, queryset=object_list)
+    context = {
+        'object_list': object_list,
+        'filter': medical_record_list
+    }
 
+    return render(request, 'search.html', context)
+
+
+
+
+"""
     if request.method == 'GET':
         if request.GET.get('name'):
             name = request.GET.get('name')
@@ -239,8 +249,4 @@ def search_view(request):
 
         context = {'medical_record': medical_record}
 
-    return render(request, 'search.html', context)
-
-
-
-
+"""

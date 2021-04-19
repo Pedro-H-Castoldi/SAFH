@@ -5,30 +5,14 @@
     <header>
         <h1>SAFH</h1>
     </header>
-
-    <div>
-        <form action="{% url 'search' %}" method="GET">
-            <div>
-                <p>Buscar ou adicionar uma ficha</p>
-                <input type="text" placeholder="Nome completo" name="name">
-                <input type="text" placeholder="SUS" name="sus">
-                <input type="date" placeholder="Nasc." name="birth_date">
-                <input type="date" placeholder="Consulta" name="consultation_date">
-                <select name="type" id="">
-                    <option value="all">Todas</option>
-                    <option value="simple">Simples</option>
-                    <option value="medication">Medicação</option>
-                    <option value="observation">Observação</option>
-                    <option value="suture">Sutura</option>
-                    <option value="band-aid">Curativo</option>
-                    <option value="withdrawal">R. Pontos</option>
-                    <option value="rh">RH</option>
-                </select>
-                <button>Buscar</button>
+        <div>
+            <form action="{% url 'search' %}" method="GET">
+                {% csrf_token %}
+                {{ filter.form }}
+                <input type="submit" value="Buscar">
                 <a href="{% url 'add_record' %}">+</a>
-            </div>
-        </form>
-    </div>
+            </form>
+        </div>
 </main>
 {% endblock %}
 

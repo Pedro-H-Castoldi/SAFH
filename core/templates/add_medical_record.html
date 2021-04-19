@@ -8,7 +8,6 @@
         {% if messages %}
             {% for m in messages %}
                 <div class="alert alert-{{ m.tags }}">
-                    <button class="close" data-dismiss="alert">X</button>
                     <strong>{{ m }}</strong>
                 </div>
             {% endfor %}
@@ -17,7 +16,7 @@
 
     <form action="" method="POST" enctype="multipart/form-data" class="form-control">
         {% csrf_token %}
-        {{ form }}
+        {{ form.as_p }}
         <button>Cadastrar</button>
     </form>
 </main>
