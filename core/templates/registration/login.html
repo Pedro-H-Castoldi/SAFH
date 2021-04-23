@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}SAFH | Login{% endblock %}
+{% block css %}{% endblock %}
+{% block content %}
+
+<section class="content-center">
+    <div class="text-center">
+        Hospital
+    </div>
+
+    <form method="POST" id="form-login">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <div id="forget_password">
+            <a href="{% url 'password_reset' %}">Esqueci minha senha</a>
+        </div>
+
+        <div>
+            <button type="submit" id="button">Entrar</button>
+        </div>
+    </form>
+</section>
+
+{% endblock %}

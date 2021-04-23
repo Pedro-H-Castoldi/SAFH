@@ -1,7 +1,7 @@
 from django import forms
 
 from .models import MedicalRecord
-from .admin import MedicalRecordAdmin
+
 
 class DateInput(forms.DateInput):
     input_type = 'date'

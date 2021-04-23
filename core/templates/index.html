@@ -4,11 +4,42 @@
 <main>
     <header>
         <h1>SAFH</h1>
+        <h2>Procure ou cadastre uma ficha médica</h2>
     </header>
         <div>
             <form action="{% url 'search' %}" method="GET">
                 {% csrf_token %}
-                {{ filter.form }}
+                <div>
+                    <label for="id_name">Nome</label>
+                    <input type="text" name="name" id="id_name">
+                </div>
+                <div>
+                    <label for="id_sus">SUS</label>
+                    <input type="text" name="sus" id="id_sus">
+                </div>
+                <div>
+                    <label for="id_birth_date">Data de Nascimento</label>
+                    <input type="date" name="birth_date" id="id_birth_date">
+                </div>
+                <div>
+                    <label for="id_consultation_date">Data de Consulta</label>
+                    <input type="date" name="consultation_date" id="id_consultation_date">
+                </div>
+                <div>
+                    <label for="id_type">Tipo</label>
+                    <select name="type" id="id_type">
+                        <option value="">Todas</option>
+                        <option value="simple">Simples</option>
+                        <option value="medication">Medicação</option>
+                        <option value="observation">Observação</option>
+                        <option value="band_aid">Curativo</option>
+                        <option value="suture">Sutura</option>
+                        <option value="withdrawal">Retirada de Pontos</option>
+                        <option value="rh">RH</option>
+                    </select>
+                </div>
+                
+
                 <input type="submit" value="Buscar">
                 <a href="{% url 'add_record' %}">+</a>
             </form>

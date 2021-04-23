@@ -11,6 +11,7 @@
 </head>
 <body>
     <header class="container">
+      {% if user.is_authenticated %}
         <nav>
             <ul class="nav justify-content-center">
                 <li class="nav-item">
@@ -19,8 +20,14 @@
                 <li class="nav-item">
                   <a class="btn btn-outline-primary" href="#">RELATÓRIOS</a>
                 </li>
-              </ul>
+                <li class="nav-item">
+                  <a class="btn btn-outline-primary" href="{% url 'logout' %}">Sair</a>
+                </li>
+            </ul>
         </nav>
+      {% else %}
+        <p>Acesse.</p>
+      {% endif %}
     </header>
 
     <div class="container">
